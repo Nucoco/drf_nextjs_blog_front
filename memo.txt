@@ -1,0 +1,50 @@
+npx create-next-app -e with-tailwindcss projectName --use-npm
+/components/layout/Layout.jsx
+/components/layout/Navigation.jsx
+/pages/_app.js
+/pages/about.jsx
+/public/top.png
+/pages/index.jsx
+/lib/posts.js
+/components/post/post.jsx
+/pages/index.jsx
+/pages/posts/[id].jsx
+
+<----next-auth---->
+npm install axios next-auth
+.env.local
+/pages/_app.js
+   -> import { Provider } from "next-auth/client";
+      <Provider session={pageProps.session}>
+/components/layout/Navigation.jsx
+   -> import {signIn, signOut, useSession} from 'next-auth/client'
+      const [session] = useSession()
+/pages/api/auth/[...nextauth].js
+   -> const settings = {
+         providers: [
+            Providers.Google({...}),
+         ],
+         callbacks: {
+            async signIn(user, account, profile) {...},
+            async jwt(token, user, account, profile, isNewUser) {...},
+            async session(session, user) {...},
+         },
+      };
+      export default (req, res) => NextAuth(req, res, settings);
+/pages/api/auth/[...nextauth].js (customize login page)
+   -> pages: {
+         signIn: "/auth/signin",
+      },
+   -> /pages/auth/signin.jsx
+         import { getProviders, signIn } from "next-auth/client";
+         export default function SignIn({ providers }) {...}
+         export async function getServerSideProps(context) {
+            const providers = await getProviders();
+            return {
+               props: { providers },
+            };
+         }
+/pages/profile.jsx
+   -> import { getSession } from "next-auth/client";
+      export default function Profile({ user }) {...}
+      export async function getServerSideProps(context) {...}
